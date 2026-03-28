@@ -175,3 +175,16 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
+
+import dj_database_url
+import os
+
+_db_url = os.environ.get('DATABASE_URL')
+if _db_url:
+    DATABASES['default'] = dj_database_url.parse(_db_url, conn_max_age=600)
+
+SECRET_KEY = os.environ.get('SECRET_KEY', SECRET_KEY)
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+FRONTEND_URL = os.environ.get('FRONTEND_URL', FRONTEND_URL)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', EMAIL_HOST_USER)
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', EMAIL_HOST_PASSWORD)
