@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-xobo-ticket-secret-key-2024'
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 # Jazzmin DOIT être AVANT django.contrib.admin
 INSTALLED_APPS = [
