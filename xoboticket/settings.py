@@ -26,8 +26,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,7 +56,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'xoboticket.wsgi.application'
 
-# Database configuration - will be overridden by DATABASE_URL if present
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -88,10 +87,14 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ============================================
-# CORS CONFIGURATION - Lit depuis variable d'environnement
+# CORS CONFIGURATION
 # ============================================
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://localhost:5174').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:5173,http://localhost:5174'
+).split(',')
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
@@ -119,9 +122,8 @@ DEFAULT_FROM_EMAIL = 'Xobo Ticket <josephdehazounde@gmail.com>'
 FRONTEND_URL = 'http://localhost:5173'
 
 # ============================================
-# JAZZMIN CONFIGURATION - Admin Moderne
+# JAZZMIN CONFIGURATION
 # ============================================
-
 JAZZMIN_SETTINGS = {
     "site_title": "Xobo Ticket Admin",
     "site_header": "Xobo Ticket",
@@ -129,13 +131,11 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenue sur Xobo Ticket",
     "copyright": "Xobo Ticket",
     "search_model": "stands.Stand",
-    
     "topmenu_links": [
         {"name": "Accueil", "url": "/admin/", "icon": "fas fa-home"},
         {"name": "Frontend", "url": "/", "icon": "fas fa-globe"},
         {"name": "API", "url": "/api/health/", "icon": "fas fa-plug"},
     ],
-    
     "icons": {
         "auth.User": "fas fa-users",
         "users.User": "fas fa-user",
@@ -143,10 +143,8 @@ JAZZMIN_SETTINGS = {
         "stands.Validation": "fas fa-check-circle",
         "auth.Group": "fas fa-users",
     },
-    
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
-    
     "show_ui_builder": True,
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {},
@@ -187,7 +185,6 @@ JAZZMIN_UI_TWEAKS = {
 # ============================================
 # ENVIRONMENT VARIABLES OVERRIDES (pour Render)
 # ============================================
-
 _db_url = os.environ.get('DATABASE_URL')
 if _db_url:
     DATABASES['default'] = dj_database_url.parse(_db_url, conn_max_age=600)
@@ -197,6 +194,3 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 FRONTEND_URL = os.environ.get('FRONTEND_URL', FRONTEND_URL)
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', EMAIL_HOST_USER)
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', EMAIL_HOST_PASSWORD)
-
-# For Render deployment, CORS_ALLOWED_ORIGINS is already set above with environment variable
-# Make sure to set CORS_ALLOWED_ORIGINS in Render environment to: https://xobo-ticket.vercel.app
