@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,6 +56,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'xoboticket.wsgi.application'
 
+# Database configuration - will be overridden by DATABASE_URL if present
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -85,7 +87,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://localhost:5174"]
+# ============================================
+# CORS CONFIGURATION - Lit depuis variable d'environnement
+# ============================================
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://localhost:5174').split(',')
+CORS_ALLOW_CREDENTIALS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
@@ -100,7 +106,9 @@ SIMPLE_JWT = {
 ADMIN_VALIDATION_PASSWORD = 'admin123'
 AUTH_USER_MODEL = 'users.User'
 
-# Email Configuration
+# ============================================
+# EMAIL CONFIGURATION
+# ============================================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -176,8 +184,9 @@ JAZZMIN_UI_TWEAKS = {
     }
 }
 
-import dj_database_url
-import os
+# ============================================
+# ENVIRONMENT VARIABLES OVERRIDES (pour Render)
+# ============================================
 
 _db_url = os.environ.get('DATABASE_URL')
 if _db_url:
@@ -188,3 +197,6 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 FRONTEND_URL = os.environ.get('FRONTEND_URL', FRONTEND_URL)
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', EMAIL_HOST_USER)
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', EMAIL_HOST_PASSWORD)
+
+# For Render deployment, CORS_ALLOWED_ORIGINS is already set above with environment variable
+# Make sure to set CORS_ALLOWED_ORIGINS in Render environment to: https://xobo-ticket.vercel.app
